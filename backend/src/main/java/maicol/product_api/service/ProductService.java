@@ -12,7 +12,6 @@ public class ProductService {
 
     private final ProductRepository productRepository;
 
-    // Inyectando por constructor como buena práctica
     public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
@@ -27,12 +26,11 @@ public class ProductService {
     }
 
     public Product saveProduct(Product product) {
-        // Validando el precio
+
         if (product.getPrice() == null || product.getPrice().compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("El precio del producto debe ser mayor que 0");
         }
-        
-        // Validando el stock
+
         if (product.getStock() == null || product.getStock() < 0) {
             throw new IllegalArgumentException("El stock del producto no puede ser negativo");
         }
@@ -44,7 +42,7 @@ public class ProductService {
         if (!productRepository.existsById(id)) {
             throw new RuntimeException("No se puede eliminar: El producto con ID " + id + " no existe");
         }
-        
+
         productRepository.deleteById(id);
     }
 }
