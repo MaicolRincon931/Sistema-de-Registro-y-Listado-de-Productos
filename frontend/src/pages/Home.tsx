@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { getProducts } from '../services/productService';
+import { ProductForm } from '../components/ProductForm';
 import { ProductTable } from '../components/ProductTable';
 import type { Product } from '../types';
 
@@ -34,7 +35,9 @@ export default function Home() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-
+        <div className="md:col-span-1">
+          <ProductForm onProductSaved={fetchProducts} />
+        </div>
 
         <div className="md:col-span-2">
           {loading && products.length === 0 ? (

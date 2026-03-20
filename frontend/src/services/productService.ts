@@ -14,5 +14,5 @@ export const saveProduct = async (product: Product): Promise<Product> => {
 };
 
 export const deleteProduct = async (id: number): Promise<void> => {
-    await axios.delete(`${API_URL}/${id}`);
+    await axios.post(`${API_URL}/${id}`);
 };
