@@ -55,7 +55,7 @@ export default function Home() {
                   Actualizar
                 </button>
               </div>
-              <ProductTable products={products} onProductDeleted={fetchProducts} />
+              <ProductTable products={products} onProductDeleted={fetchProducts} onProductUpdated={fetchProducts} />
             </>
           )}
         </div>
