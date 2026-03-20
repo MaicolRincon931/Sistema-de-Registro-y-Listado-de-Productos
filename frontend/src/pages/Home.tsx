@@ -17,7 +17,7 @@ export default function Home() {
       setError(null);
     } catch (err) {
       console.error('Error al cargar productos:', err);
-      setError('No se pudo conectar con el servidor. Verifica que el backend esté corriendo.');
+      setError('No se pudo conectar con el servidor');
     } finally {
       setLoading(false);
     }

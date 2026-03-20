@@ -1,4 +1,6 @@
+import { useState } from 'react';
 import { deleteProduct } from '../services/productService';
+import { ConfirmationModal } from './ConfirmationModal';
 import type { Product } from '../types';
 
 interface ProductTableProps {
@@ -7,15 +9,25 @@ interface ProductTableProps {
 }
 
 export function ProductTable({ products, onProductDeleted }: ProductTableProps) {
-  
-  const handleDelete = async (id: number) => {
-    if (window.confirm('¿Estás seguro de que deseas eliminar este producto?')) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedProductId, setSelectedProductId] = useState<number | null>(null);
+
+  const handleDeleteClick = (id: number) => {
+    setSelectedProductId(id);
+    setIsModalOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (selectedProductId !== null) {
       try {
-        await deleteProduct(id);
+        await deleteProduct(selectedProductId);
         onProductDeleted();
       } catch (error) {
         console.error('Error al eliminar el producto:', error);
         alert('No se pudo eliminar el producto.');
+      } finally {
+        setIsModalOpen(false);
+        setSelectedProductId(null);
       }
     }
   };
@@ -53,15 +65,14 @@ export function ProductTable({ products, onProductDeleted }: ProductTableProps) 
                 ${product.price ? product.price.toFixed(2) : '0.00'}
               </td>
               <td className="p-3 text-center">
-                <span className={`px-2 py-1 rounded text-xs font-bold ${
-                  product.stock > 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                }`}>
+                <span className={`px-2 py-1 rounded text-xs font-bold ${product.stock > 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                  }`}>
                   {product.stock}
                 </span>
               </td>
               <td className="p-3 text-center">
                 <button
-                  onClick={() => product.id && handleDelete(product.id)}
+                  onClick={() => product.id && handleDeleteClick(product.id)}
                   className="bg-red-500 hover:bg-red-600 text-white p-2 rounded text-xs px-4"
                 >
                   Eliminar
@@ -71,6 +82,14 @@ export function ProductTable({ products, onProductDeleted }: ProductTableProps) 
           ))}
         </tbody>
       </table>
+
+      <ConfirmationModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={handleConfirmDelete}
+        title="Eliminar producto?"
+        message="Esta seguro de que deseas eliminar este producto?"
+      />
     </div>
   );
 }
